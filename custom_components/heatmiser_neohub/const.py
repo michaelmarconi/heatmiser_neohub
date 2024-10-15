@@ -1,8 +1,8 @@
-"""Constants for integration_blueprint."""
+"""Constants for heatmiser_neohub."""
 
 from logging import Logger, getLogger
 
 LOGGER: Logger = getLogger(__package__)
 
-DOMAIN = "integration_blueprint"
+DOMAIN = "heatmiser_neohub"
 ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"

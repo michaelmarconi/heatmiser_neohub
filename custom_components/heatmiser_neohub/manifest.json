@@ -1,0 +1,13 @@
+{
+  "domain": "heatmiser_neohub",
+  "name": "Heatmiser neoHub",
+  "codeowners": [
+    "@michaelmarconi"
+  ],
+  "icon": "mdi:thermostat-box",
+  "config_flow": true,
+  "documentation": "https://github.com/michaelmarconi/heatmiser_neohub",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/michaelmarconi/heatmiser_neohub/issues",
+  "version": "0.0.1"
+}
