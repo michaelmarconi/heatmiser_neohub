@@ -10,19 +10,19 @@ from homeassistant.components.binary_sensor import (
     BinarySensorEntityDescription,
 )
 
-from .entity import IntegrationBlueprintEntity
+from .entity import HeatmiserNeohubEntity
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-    from .coordinator import BlueprintDataUpdateCoordinator
-    from .data import IntegrationBlueprintConfigEntry
+    from .coordinator import HeatmiserNeohubDataUpdateCoordinator
+    from .data import HeatmiserNeohubConfigEntry
 
 ENTITY_DESCRIPTIONS = (
     BinarySensorEntityDescription(
         key="heatmiser_neohub",
-        name="Integration Blueprint Binary Sensor",
+        name="Integration HeatmiserNeohub Binary Sensor",
         device_class=BinarySensorDeviceClass.CONNECTIVITY,
     ),
 )
@@ -30,12 +30,12 @@ ENTITY_DESCRIPTIONS = (
 
 async def async_setup_entry(
     hass: HomeAssistant,  # noqa: ARG001 Unused function argument: `hass`
-    entry: IntegrationBlueprintConfigEntry,
+    entry: HeatmiserNeohubConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the binary_sensor platform."""
     async_add_entities(
-        IntegrationBlueprintBinarySensor(
+        HeatmiserNeohubBinarySensor(
             coordinator=entry.runtime_data.coordinator,
             entity_description=entity_description,
         )
@@ -43,12 +43,12 @@ async def async_setup_entry(
     )
 
 
-class IntegrationBlueprintBinarySensor(IntegrationBlueprintEntity, BinarySensorEntity):
+class HeatmiserNeohubBinarySensor(HeatmiserNeohubEntity, BinarySensorEntity):
     """heatmiser_neohub binary_sensor class."""
 
     def __init__(
         self,
-        coordinator: BlueprintDataUpdateCoordinator,
+        coordinator: HeatmiserNeohubDataUpdateCoordinator,
         entity_description: BinarySensorEntityDescription,
     ) -> None:
         """Initialize the binary_sensor class."""

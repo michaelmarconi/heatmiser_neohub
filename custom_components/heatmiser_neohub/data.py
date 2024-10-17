@@ -9,17 +9,17 @@ if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.loader import Integration
 
-    from .api import IntegrationBlueprintApiClient
-    from .coordinator import BlueprintDataUpdateCoordinator
+    from .api import HeatmiserNeohubApiClient
+    from .coordinator import HeatmiserNeohubDataUpdateCoordinator
 
 
-type IntegrationBlueprintConfigEntry = ConfigEntry[IntegrationBlueprintData]
+type HeatmiserNeohubConfigEntry = ConfigEntry[HeatmiserNeohubData]
 
 
 @dataclass
-class IntegrationBlueprintData:
-    """Data for the Blueprint integration."""
+class HeatmiserNeohubData:
+    """Data for the HeatmiserNeohub integration."""
 
-    client: IntegrationBlueprintApiClient
-    coordinator: BlueprintDataUpdateCoordinator
+    client: HeatmiserNeohubApiClient
+    coordinator: HeatmiserNeohubDataUpdateCoordinator
     integration: Integration

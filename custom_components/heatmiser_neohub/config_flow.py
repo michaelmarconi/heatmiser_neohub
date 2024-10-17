@@ -1,24 +1,29 @@
-"""Adds config flow for Blueprint."""
+"""Adds config flow for HeatmiserNeohub."""
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import voluptuous as vol
 from homeassistant import config_entries, data_entry_flow
-from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
+from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TOKEN
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 
 from .api import (
-    IntegrationBlueprintApiClient,
-    IntegrationBlueprintApiClientAuthenticationError,
-    IntegrationBlueprintApiClientCommunicationError,
-    IntegrationBlueprintApiClientError,
+    HeatmiserNeohubApiClient,
+    HeatmiserNeohubApiClientAuthenticationError,
+    HeatmiserNeohubApiClientCommunicationError,
+    HeatmiserNeohubApiClientError,
 )
 from .const import DOMAIN, LOGGER
 
+if TYPE_CHECKING:
+    from numpy import number
 
-class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
-    """Config flow for Blueprint."""
+
+class HeatmiserNeohubFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
+    """Config flow for HeatmiserNeohub."""
 
     VERSION = 1
 
@@ -31,21 +36,23 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             try:
                 await self._test_credentials(
-                    username=user_input[CONF_USERNAME],
-                    password=user_input[CONF_PASSWORD],
+                    host=user_input[CONF_HOST],
+                    port=user_input[CONF_PORT],
+                    token=user_input[CONF_TOKEN],
                 )
-            except IntegrationBlueprintApiClientAuthenticationError as exception:
+            except HeatmiserNeohubApiClientAuthenticationError as exception:
                 LOGGER.warning(exception)
                 _errors["base"] = "auth"
-            except IntegrationBlueprintApiClientCommunicationError as exception:
+            except HeatmiserNeohubApiClientCommunicationError as exception:
                 LOGGER.error(exception)
                 _errors["base"] = "connection"
-            except IntegrationBlueprintApiClientError as exception:
+            except HeatmiserNeohubApiClientError as exception:
                 LOGGER.exception(exception)
                 _errors["base"] = "unknown"
             else:
                 return self.async_create_entry(
-                    title=user_input[CONF_USERNAME],
+                    title="Heatmiser neoHub",
+                    # title=user_input[CONF_USERNAME],  # TODO: nuke
                     data=user_input,
                 )
 
@@ -54,14 +61,25 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(
-                        CONF_USERNAME,
-                        default=(user_input or {}).get(CONF_USERNAME, vol.UNDEFINED),
+                        CONF_HOST,
+                        default=(user_input or {}).get(CONF_HOST, ""),
                     ): selector.TextSelector(
                         selector.TextSelectorConfig(
                             type=selector.TextSelectorType.TEXT,
                         ),
                     ),
-                    vol.Required(CONF_PASSWORD): selector.TextSelector(
+                    vol.Required(
+                        CONF_PORT,
+                        default=(user_input or {}).get(CONF_HOST, ""),
+                    ): selector.TextSelector(
+                        selector.TextSelectorConfig(
+                            type=selector.TextSelectorType.NUMBER,
+                        ),
+                    ),
+                    vol.Required(
+                        CONF_TOKEN,
+                        default=(user_input or {}).get(CONF_HOST, ""),
+                    ): selector.TextSelector(
                         selector.TextSelectorConfig(
                             type=selector.TextSelectorType.PASSWORD,
                         ),
@@ -71,11 +89,12 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             errors=_errors,
         )
 
-    async def _test_credentials(self, username: str, password: str) -> None:
+    async def _test_credentials(self, host: str, port: number, token: str) -> None:
         """Validate credentials."""
-        client = IntegrationBlueprintApiClient(
-            username=username,
-            password=password,
+        client = HeatmiserNeohubApiClient(
+            host=host,
+            port=port,
+            token=token,
             session=async_create_clientsession(self.hass),
         )
         await client.async_get_data()

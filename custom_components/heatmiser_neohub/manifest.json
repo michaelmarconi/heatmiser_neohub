@@ -4,7 +4,7 @@
   "codeowners": [
     "@michaelmarconi"
   ],
-  "icon": "mdi:thermostat-box",
+  "icon": "icon.png",
   "config_flow": true,
   "documentation": "https://github.com/michaelmarconi/heatmiser_neohub",
   "iot_class": "local_push",
